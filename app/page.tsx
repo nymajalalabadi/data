@@ -1,9 +1,17 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
 
-function Home(props: { products: { id: string, title: string, description: string }[] }) {
+type Product = {
+  id: string;
+  title: string;
+  description: string;
+};
 
-  const { products } = props;
+async function Home() {
+  const filePath = path.join(process.cwd(), 'data', 'dummy-backend.json');
+  const fileContent = await readFile(filePath, 'utf-8');
+  const data = JSON.parse(fileContent);
+  const { products }: { products: Product[] } = data;
 
   return (
     <ul>
@@ -12,18 +20,6 @@ function Home(props: { products: { id: string, title: string, description: strin
       ))}
     </ul>
   );
-}
-
-
-export async function getStaticProps() {
-
-  const filePath = path.join(process.cwd(), 'data', 'dummy-backend.json');
-  const fileContent = await readFile(filePath, 'utf-8');
-  const data = JSON.parse(fileContent);
-
-  return {
-    props: data.products,
-  };
 }
 
 export default Home;
